@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periódico Estudiantil JGM</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --paper-color: #FFFFFF;
+            --text-color: #1A2129;
+            --u-blue: #0F2C59;
+            --u-blue-hover: #1b498a;
+            --accent-gold: #C5A880;
+            --border-color: #D1D8E0;
+            --secondary-text: #5A6578;
+            --header-font: 'Playfair Display', serif;
+            --body-font: 'Merriweather', serif;
+            --ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--body-font);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background-color: var(--paper-color);
+            border-bottom: 4px solid var(--u-blue);
+            padding: 25px 5% 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(15, 44, 89, 0.05);
+        }
+
+        .logo {
+            font-family: var(--header-font);
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 900;
+            color: var(--u-blue);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .tagline {
+            font-family: var(--ui-font);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--secondary-text);
+            letter-spacing: 2.5px;
+            margin-bottom: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            position: relative;
+        }
+
+        .nav-item {
+            position: relative;
+            display: inline-block;
+        }
+
+        nav a, .dropdown-btn {
+            font-family: var(--ui-font);
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            cursor: pointer;
+            padding: 8px 14px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+        }
+
+        nav a:hover, nav a.active, .dropdown-btn:hover, .dropdown-btn.active {
+            color: var(--u-blue);
+            background-color: rgba(15, 44, 89, 0.06);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--paper-color);
+            min-width: 170px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            z-index: 500;
+            margin-top: 2px;
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 10px 16px;
+            display: block;
+            width: 100%;
+            text-align: left;
+            border-radius: 0;
+            font-size: 0.8rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(15, 44, 89, 0.08);
+            color: var(--u-blue);
+        }
+
+        .nav-item:hover .dropdown-content {
+            display: block;
+        }
+
+        .btn-publicar {
+            background-color: var(--u-blue);
+            color: #fff !important;
+            padding: 8px 18px;
+            border: 1px solid var(--u-blue);
+            border-radius: 4px;
+            font-family: var(--ui-font);
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 10px;
+        }
+
+        .btn-publicar:hover {
+            background-color: var(--u-blue-hover) !important;
+            transform: translateY(-1px);
+        }
+
+        .barra-utilidades {
+            max-width: 1250px;
+            margin: 20px auto 0;
+            padding: 0 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .buscador-contenedor {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            background: var(--paper-color);
+            padding: 8px 14px;
+            border-radius: 6px;
+            width: 320px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .buscador-contenedor input {
+            border: none;
+            outline: none;
+            font-family: var(--ui-font);
+            font-size: 0.9rem;
+            width: 100%;
+            background: transparent;
+            color: var(--text-color);
+        }
+
+        .calendario-widget {
+            font-family: var(--ui-font);
+            font-size: 0.85rem;
+            color: var(--text-color);
+            background: var(--paper-color);
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        main {
+            max-width: 1250px;
+            margin: 30px auto;
+            padding: 0 5%;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 50px;
+        }
+
+        .articulo-destacado {
+            background: var(--paper-color);
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            border-left: 6px solid var(--u-blue);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+        }
+
+        .etiqueta-seccion {
+            font-family: var(--ui-font);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--u-blue);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: inline-block;
+            letter-spacing: 1.2px;
+            background: rgba(15, 44, 89, 0.08);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .titulo-articulo {
+            font-family: var(--header-font);
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            line-height: 1.15;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .meta-articulo {
+            font-family: var(--ui-font);
+            font-size: 0.85rem;
+            color: var(--secondary-text);
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .autor-destacado {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .contenido-articulo p {
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .contenido-articulo.con-dropcap p:first-of-type::first-letter {
+            font-family: var(--header-font);
+            font-size: 4rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 10px;
+            color: var(--u-blue);
+            font-weight: bold;
+        }
+
+        .barra-lateral {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .modulo-lateral {
+            background: var(--paper-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .titulo-modulo {
+            font-family: var(--header-font);
+            font-size: 1.35rem;
+            margin-bottom: 8px;
+            color: var(--u-blue);
+        }
+
+        .resumen-modulo {
+            font-size: 0.88rem;
+            color: var(--secondary-text);
+            margin-bottom: 15px;
+            font-family: var(--ui-font);
+        }
+
+        .ranking-lista {
+            list-style: none;
+            max-height: 380px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: #fff;
+            padding: 5px;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 0.85rem;
+            font-family: var(--ui-font);
+            transition: background 0.15s;
+        }
+
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+
+        .ranking-item:hover {
+            background-color: rgba(15, 44, 89, 0.03);
+        }
+
+        .ranking-num {
+            font-family: var(--header-font);
+            font-weight: bold;
+            color: var(--u-blue);
+            font-size: 1.15rem;
+            min-width: 38px;
+        }
+
+        .ranking-titulo {
+            color: var(--text-color);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .ranking-titulo:hover {
+            color: var(--u-blue);
+            text-decoration: underline;
+        }
+
+        .carpeta-archivo {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .carpeta-archivo:hover {
+            background: #f1f5f9;
+            border-color: var(--u-blue);
+        }
+
+        .carpeta-titulo {
+            font-family: var(--ui-font);
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--u-blue);
+        }
+
+        .carpeta-contenido {
+            display: none;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            font-family: var(--ui-font);
+        }
+
+        .carpeta-contenido ul {
+            list-style: none;
+            padding-left: 5px;
+        }
+
+        .carpeta-contenido li {
+            padding: 6px 0;
+            color: var(--secondary-text);
+            cursor: pointer;
+        }
+
+        .carpeta-contenido li:hover {
+            color: var(--u-blue);
+            text-decoration: underline;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 44, 89, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--paper-color);
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 45px;
+            border-radius: 10px;
+            border-top: 6px solid var(--u-blue);
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .cerrar-modal {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--secondary-text);
+            border: none;
+            background: none;
+            line-height: 1;
+        }
+        
+        .cerrar-modal:hover {
+            color: var(--u-blue);
+        }
+
+        .modal-titulo {
+            font-family: var(--header-font);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--u-blue);
+        }
+
+        .form-grupo {
+            margin-bottom: 20px;
+        }
+
+        .form-grupo label {
+            display: block;
+            font-family: var(--ui-font);
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            color: var(--secondary-text);
+        }
+
+        .form-grupo input, 
+        .form-grupo select, 
+        .form-grupo textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: #fff;
+            font-family: var(--ui-font);
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+
+        .form-grupo input:focus, 
+        .form-grupo select:focus, 
+        .form-grupo textarea:focus {
+            outline: none;
+            border-color: var(--u-blue);
+            box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.1);
+        }
+
+        .form-grupo textarea {
+            resize: vertical;
+            min-height: 140px;
+            font-family: var(--body-font);
+        }
+
+        .nota-privacidad {
+            font-size: 0.8rem;
+            color: var(--u-blue);
+            background-color: rgba(15, 44, 89, 0.05);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--u-blue);
+            margin-top: 8px;
+            font-family: var(--ui-font);
+        }
+
+        .cloud-security-box {
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            background: #fbfcfd;
+            padding: 16px;
+            margin-bottom: 25px;
+            font-family: var(--ui-font);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .cloud-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .cloud-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--u-blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cloud-challenge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fff;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        .cloud-challenge-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .cloud-challenge input[type="number"] {
+            width: 70px;
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--u-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 14px;
+            font-family: var(--ui-font);
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--u-blue-hover);
+        }
+
+        .seccion-informacion h3 {
+            font-family: var(--ui-font);
+            text-transform: uppercase;
+            font-size: 0.95rem;
+            color: var(--u-blue);
+            margin-top: 25px;
+            margin-bottom: 8px;
+            border-bottom: 2px solid rgba(15, 44, 89, 0.1);
+            padding-bottom: 5px;
+        }
+
+        .seccion-informacion p {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            font-family: var(--body-font);
+            color: var(--secondary-text);
+        }
+
+        footer {
+            background-color: var(--paper-color);
+            border-top: 2px solid var(--u-blue);
+            margin-top: 60px;
+            padding: 40px 5%;
+            text-align: center;
+            font-family: var(--ui-font);
+            font-size: 0.85rem;
+            color: var(--secondary-text);
+        }
+
+        .footer-links {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--u-blue);
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .dropdown-content {
+                position: static;
+                box-shadow: none;
+                border: none;
+                padding-left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="cambiarSeccion('Portada', document.querySelector('nav a'))">Periódico Estudiantil JGM</div>
+        <div class="tagline">Plataforma libre de ensayo, literatura y opinión estudiantil</div>
+        <nav>
+            <a onclick="cambiarSeccion('Portada', this)" class="active">Portada</a>
+            <a onclick="cambiarSeccion('Cartas al Director', this)">Cartas al Director</a>
+            <a onclick="cambiarSeccion('Cuentos', this)">Cuentos</a>
+            <a onclick="cambiarSeccion('Crónicas', this)">Crónicas</a>
+            <a onclick="cambiarSeccion('Ensayos & Opinión', this)">Ensayos & Opinión</a>
+            <a onclick="cambiarSeccion('Poesía', this)">Poesía</a>
+            <a onclick="cambiarSeccion('Filosofía', this)">Filosofía</a>
+            
+            <div class="nav-item">
+                <button class="dropdown-btn" onclick="toggleDropdownResena(event)">Reseña ▾</button>
+                <div class="dropdown-content" id="dropdownResenaMenu">
+                    <a onclick="cambiarSeccion('Reseña - Películas', this)">Películas</a>
+                    <a onclick="cambiarSeccion('Reseña - Literatura', this)">Literatura</a>
+                    <a onclick="cambiarSeccion('Reseña - Arte', this)">Arte</a>
+                </div>
+            </div>
+
+            <a onclick="abrirModal('modalInformacion')">Información & Reglas</a>
+            <button class="btn-publicar" onclick="abrirModal('modalEnvio')">Enviar Colaboración</button>
+        </nav>
+    </header>
+
+    <div class="barra-utilidades">
+        <div class="buscador-contenedor">
+            <span style="margin-right: 8px; color: var(--secondary-text);">🔍</span>
+            <input type="text" id="inputBuscador" placeholder="Buscar por título, autor o sección..." oninput="filtrarArticulos()">
+        </div>
+        <div class="calendario-widget" id="fechaActualDisplay">
+            📅 Cargando fecha actual...
+        </div>
+    </div>
+
+    <main>
+        <article class="articulo-destacado" id="seccionPrincipalArticulo">
+            <span class="etiqueta-seccion" id="etiquetaSeccionActiva">Portada</span>
+            <h1 class="titulo-articulo" id="tituloArticuloPrincipal">Bienvenidos al Periódico Estudiantil JGM</h1>
+            <div class="meta-articulo" id="metaArticuloPrincipal">
+                Edición Activa: <span class="autor-destacado" id="autorArticuloPrincipal">Publicaciones Estudiantiles</span> (<span id="edicionArticuloPrincipal">#01</span>)
+            </div>
+            
+            <div class="contenido-articulo con-dropcap" id="contenidoArticuloPrincipal">
+                <p>Bienvenidas y bienvenidos a la plataforma del Periódico Estudiantil del Campus Juan Gómez Millas. Este espacio reúne la producción ensayística, literaria y crítica de la comunidad universitaria. Selecciona cualquiera de las secciones en el menú superior para revisar sus textos o envía tus colaboraciones mediante el botón oficial.</p>
+            </div>
+        </article>
+
+        <aside class="barra-lateral">
+            <div class="modulo-lateral">
+                <span class="etiqueta-seccion">Índice de Publicaciones</span>
+                <h2 class="titulo-modulo">Artículos Publicados</h2>
+                <p class="resumen-modulo">Accede a las colaboraciones del catálogo (#01 en adelante).</p>
+                <ul class="ranking-lista" id="rankingListaContainer">
+                </ul>
+            </div>
+
+            <div class="modulo-lateral">
+                <span class="etiqueta-seccion">Archivo por Fecha</span>
+                <h2 class="titulo-modulo">Histórico de Envíos</h2>
+                <p class="resumen-modulo">Explora publicaciones organizadas por fecha de edición.</p>
+                
+                <div class="carpeta-archivo" onclick="toggleCarpeta('carpetaHistorica')">
+                    <div class="carpeta-titulo">📁 Edición Septiembre 2026 <span>▼</span></div>
+                    <div class="carpeta-contenido" id="carpetaHistorica">
+                        <ul id="listaCarpetaHistorica">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <div class="modal-overlay" id="modalEnvio">
+        <div class="modal-content">
+            <button class="cerrar-modal" onclick="cerrarModal('modalEnvio')" aria-label="Cerrar">&times;</button>
+            <h2 class="modal-titulo">Enviar Colaboración</h2>
+            <p style="margin-bottom: 25px; font-size: 0.95rem; color: var(--secondary-text); font-family: var(--ui-font);">
+                Las colaboraciones serán enviadas directamente al equipo editorial en <strong>iv3308941@gmail.com</strong> para su revisión.
+            </p>
+            
+            <form action="https://formsubmit.co/iv3308941@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="return validarEnvioFormulario(event)">
+                <input type="hidden" name="_cc" value="francoisrabelais666@gmail.com,agustinarcearaneda@gmail.com">
+                <input type="hidden" name="_subject" value="Nueva Colaboración - Periódico Estudiantil JGM">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_captcha" value="false">
+                
+                <input type="text" name="_honeypot" style="display:none !important;" tabindex="-1" autocomplete="off">
+
+                <div class="form-grupo">
+                    <label>Nombre y Apellido (o Seudónimo)</label>
+                    <input type="text" name="Nombre" required placeholder="Ej: Valentina Parra">
+                </div>
+                
+                <div class="form-grupo">
+                    <label>Correo Electrónico</label>
+                    <input type="email" name="Correo" required placeholder="correo@estudiante.uchile.cl">
+                </div>
+
+                <div class="form-grupo">
+                    <label>RUT (Verificación de identidad)</label>
+                    <input type="text" name="RUT" required placeholder="12.345.678-9">
+                    <div class="nota-privacidad">
+                        <strong>Privacidad estricta:</strong> El RUT se requiere exclusivamente para validar la pertenencia a la comunidad estudiantil. No se publicará ni compartirá.
+                    </div>
+                </div>
+
+                <div class="form-grupo">
+                    <label>Sección de destino</label>
+                    <select name="Seccion" required id="selectSeccionForm">
+                        <option value="">Selecciona una sección...</option>
+                        <option value="Cartas al Director">Cartas al Director</option>
+                        <option value="Cuentos">Cuentos</option>
+                        <option value="Crónicas">Crónicas</option>
+                        <option value="Ensayos & Opinión">Ensayos & Opinión</option>
+                        <option value="Poesía">Poesía</option>
+                        <option value="Filosofía">Filosofía</option>
+                        <option value="Reseña - Películas">Reseña - Películas</option>
+                        <option value="Reseña - Literatura">Reseña - Literatura</option>
+                        <option value="Reseña - Arte">Reseña - Arte</option>
+                    </select>
+                </div>
+
+                <div class="form-grupo">
+                    <label>Adjuntar Archivo de Colaboración (PDF, Word, TXT)</label>
+                    <input type="file" name="attachment" accept=".pdf,.doc,.docx,.txt" required>
+                </div>
+
+                <div class="form-grupo">
+                    <label>Texto o Comentarios adicionales</label>
+                    <textarea name="Mensaje" placeholder="Escribe un resumen o el texto de tu colaboración aquí..."></textarea>
+                </div>
+
+                <div class="cloud-security-box">
+                    <div class="cloud-header">
+                        <div class="cloud-title">🛡️ Protección Anti-Robot (Cloud Verification)</div>
+                        <span style="font-size: 0.75rem; color: var(--secondary-text);">Seguridad JGM</span>
+                    </div>
+                    <div class="cloud-challenge">
+                        <span class="cloud-challenge-text" id="desafioMatematicoTexto">Resuelve: 3 + 4 =</span>
+                        <input type="number" id="inputRespuestaCaptcha" required placeholder="?">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Enviar para revisión editorial</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalInformacion">
+        <div class="modal-content seccion-informacion">
+            <button class="cerrar-modal" onclick="cerrarModal('modalInformacion')" aria-label="Cerrar">&times;</button>
+            <h2 class="modal-titulo">Información y Línea Editorial</h2>
+            <p style="font-family: var(--ui-font); margin-bottom: 20px;">
+                Propósito, normas y directrices del Periódico Estudiantil JGM.
+            </p>
+            
+            <h3>1. Propósito de la Plataforma</h3>
+            <p>El Periódico Estudiantil JGM es un espacio independiente y autogestionado concebido para albergar la reflexión crítica, el ensayo ensayístico, la creación literaria y el debate de ideas entre estudiantes del campus Juan Gómez Millas.</p>
+
+            <h3>2. Independencia Institucional</h3>
+            <p>Esta plataforma opera con autonomía intelectual. <strong>No constituye un órgano oficial de la Universidad de Chile</strong> ni recibe directrices de sus autoridades administrativas.</p>
+
+            <h3>3. Normas de Colaboración</h3>
+            <p>Se aceptan colaboraciones firmadas bajo nombre real o seudónimo siempre que cuenten con un correo de contacto válido. No se publicarán textos que inciten a la discriminación o discursos de odio.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>Periódico Estudiantil JGM</strong> — Campus Juan Gómez Millas.</p>
+        <p>Plataforma estudiantil independiente. No afiliada a canales oficiales de la Universidad de Chile.</p>
+        <div class="footer-links">
+            <a onclick="abrirModal('modalInformacion')">Línea Editorial & Normas</a>
+        </div>
+    </footer>
+
+    <script>
+        const articulosBase = [
+            {
+                id: 1,
+                numeroEdicion: "#01",
+                seccion: "Cartas al Director",
+                titulo: "El enchufe, los cables de media tensión y el periodismo",
+                autor: "Anónimo",
+                fecha: "16 Septiembre 2026",
+                contenido: `
+                    <p>Borges afirmaba que "el periodismo distorsiona la mentalidad del escritor", mientras que Hemingway adoptaba una postura más pragmática: "el trabajo periodístico no le hará daño a un escritor joven y podrá ayudarlo si lo abandona a tiempo”.</p>
+                    <p>El periodismo siempre lleva implícita una intencionalidad, un modo de uso colectivo en la consciencia individual. El enchufe funciona para conectar un puerto, pero detrás de la pared hay cables de alta tensión sobre los cuales se pueden trazar nuevas derivaciones eléctricas. Incluso es posible colgarse de esas instalaciones para alimentar nuevas viviendas. Todo el mundo conoce los riesgos y las consecuencias de estas conexiones clandestinas.</p>
+                    <p>Sin embargo, en un arrebato de indignación teórica, se suele repetir que la prensa deforma la creación literaria. Como si se ignorara que el enchufe contiene cobre, y que al extraer ese metal puede venderse para financiar otros menesteres. Sentido común y consciencia colectiva en estado puro.</p>
+                    <p>Para formular afirmaciones tajantes sobre los oficios de la escritura y la prensa, es necesario medir la potencia de los cables de media tensión. Cuidado con dónde se busca la energía para sostener el pensamiento crítico en el campus.</p>
+                `
+            }
+        ];
+
+        let num1 = Math.floor(Math.random() * 8) + 2;
+        let num2 = Math.floor(Math.random() * 8) + 1;
+        let resultadoCorrectoCaptcha = num1 + num2;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const fechaHoy = new Date().toLocaleDateString('es-ES', opciones);
+            document.getElementById('fechaActualDisplay').innerText = `📅 ${fechaHoy.charAt(0).toUpperCase() + fechaHoy.slice(1)}`;
+
+            document.getElementById('desafioMatematicoTexto').innerText = `Resuelve la suma: ${num1} + ${num2} =`;
+
+            renderizarIndexArticulos();
+        });
+
+        function renderizarIndexArticulos() {
+            const container = document.getElementById('rankingListaContainer');
+            const listaCarpeta = document.getElementById('listaCarpetaHistorica');
+            
+            let htmlRanking = '';
+            let htmlCarpeta = '';
+
+            articulosBase.forEach((art) => {
+                htmlRanking += `
+                    <li class="ranking-item">
+                        <span class="ranking-num">${art.numeroEdicion}</span>
+                        <a class="ranking-titulo" onclick="cargarArticuloPorId(${art.id})">${art.titulo}</a>
+                    </li>
+                `;
+
+                htmlCarpeta += `
+                    <li onclick="cargarArticuloPorId(${art.id})">• [${art.seccion}] ${art.titulo}</li>
+                `;
+            });
+
+            container.innerHTML = htmlRanking;
+            listaCarpeta.innerHTML = htmlCarpeta;
+        }
+
+        function cambiarSeccion(nombreSeccion, elementoNav) {
+            document.querySelectorAll('nav a, .dropdown-btn').forEach(el => el.classList.remove('active'));
+            if(elementoNav) elementoNav.classList.add('active');
+
+            const etiquetaSeccion = document.getElementById('etiquetaSeccionActiva');
+            const tituloArt = document.getElementById('tituloArticuloPrincipal');
+            const autorArt = document.getElementById('autorArticuloPrincipal');
+            const edicionArt = document.getElementById('edicionArticuloPrincipal');
+            const contenidoArt = document.getElementById('contenidoArticuloPrincipal');
+
+            etiquetaSeccion.innerText = nombreSeccion;
+
+            if (nombreSeccion === 'Cartas al Director') {
+                const art = articulosBase[0];
+                tituloArt.innerText = art.titulo;
+                autorArt.innerText = art.autor;
+                edicionArt.innerText = art.numeroEdicion;
+                contenidoArt.innerHTML = art.contenido;
+                contenidoArt.classList.add('con-dropcap');
+            } else if (nombreSeccion === 'Portada') {
+                tituloArt.innerText = "Bienvenidos al Periódico Estudiantil JGM";
+                autorArt.innerText = "Publicaciones Estudiantiles";
+                edicionArt.innerText = "#01";
+                contenidoArt.classList.add('con-dropcap');
+                contenidoArt.innerHTML = `
+                    <p>Bienvenidas y bienvenidos a la plataforma del Periódico Estudiantil del Campus Juan Gómez Millas. Este espacio reúne la producción ensayística, literaria y crítica de la comunidad universitaria. Selecciona cualquiera de las secciones en el menú superior para revisar sus textos o envía tus colaboraciones mediante el botón oficial.</p>
+                `;
+            } else {
+                tituloArt.innerText = `Sección ${nombreSeccion}`;
+                autorArt.innerText = "Comité Editorial JGM";
+                edicionArt.innerText = "Convocatoria Abierta";
+                contenidoArt.classList.remove('con-dropcap');
+                contenidoArt.innerHTML = `
+                    <p>Actualmente no hay artículos publicados en la sección de <strong>${nombreSeccion}</strong>.</p>
+                    <p>Si deseas enviar una propuesta, ensayo, poesía o reseña para esta área, utiliza el botón superior de <strong>"Enviar Colaboración"</strong> e indica la sección correspondiente.</p>
+                    <p style="margin-top: 25px;"><button class="btn-publicar" onclick="abrirModalConSeccion('${nombreSeccion}')">Enviar texto a ${nombreSeccion}</button></p>
+                `;
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function cargarArticuloPorId(id) {
+            const art = articulosBase.find(a => a.id === id);
+            if (!art) return;
+
+            document.getElementById('etiquetaSeccionActiva').innerText = art.seccion;
+            document.getElementById('tituloArticuloPrincipal').innerText = art.titulo;
+            document.getElementById('autorArticuloPrincipal').innerText = art.autor;
+            document.getElementById('edicionArticuloPrincipal').innerText = art.numeroEdicion;
+            
+            const contenidoArt = document.getElementById('contenidoArticuloPrincipal');
+            contenidoArt.innerHTML = art.contenido;
+            contenidoArt.classList.add('con-dropcap');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function abrirModal(id) {
+            document.getElementById(id).style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function abrirModalConSeccion(seccion) {
+            abrirModal('modalEnvio');
+            const select = document.getElementById('selectSeccionForm');
+            if (select) {
+                select.value = seccion;
+            }
+        }
+
+        function cerrarModal(id) {
+            document.getElementById(id).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function validarEnvioFormulario(e) {
+            const resp = parseInt(document.getElementById('inputRespuestaCaptcha').value, 10);
+            if (isNaN(resp) || resp !== resultadoCorrectoCaptcha) {
+                alert("Verificación Anti-Robot incorrecta. Por favor, resuelve el cálculo matemático correctamente.");
+                e.preventDefault();
+                return false;
+            }
+            return true;
+        }
+
+        function toggleDropdownResena(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('dropdownResenaMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleCarpeta(idCarpeta) {
+            const contenido = document.getElementById(idCarpeta);
+            contenido.style.display = contenido.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function filtrarArticulos() {
+            const query = document.getElementById('inputBuscador').value.toLowerCase();
+            const articuloPrincipal = document.getElementById('seccionPrincipalArticulo');
+            
+            if (query.trim() === '') {
+                articuloPrincipal.style.opacity = '1';
+                articuloPrincipal.style.borderLeftColor = 'var(--u-blue)';
+                return;
+            }
+
+            const texto = articuloPrincipal.innerText.toLowerCase();
+            if (texto.includes(query)) {
+                articuloPrincipal.style.opacity = '1';
+                articuloPrincipal.style.borderLeftColor = '#C5A880';
+            } else {
+                articuloPrincipal.style.opacity = '0.4';
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.style.display = "none";
+                document.body.style.overflow = 'auto';
+            }
+            const dropdown = document.getElementById('dropdownResenaMenu');
+            if (dropdown && dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
