@@ -6,14 +6,32 @@ media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
 collections:
+  # 1. PANEL DE CONTROL DE LA PÁGINA
+  - name: "ajustes_sitio"
+    label: "⚙️ Administrar Página"
+    files:
+      - label: "Configuración y Menú"
+        name: "configuracion"
+        file: "contenido/configuracion.json"
+        fields:
+          - { label: "Título del Periódico", name: "titulo_principal", widget: "string" }
+          - { label: "Subtítulo / Lema", name: "lema", widget: "string" }
+          - label: "Menú de Secciones (Agrega o quita secciones aquí)"
+            name: "secciones_menu"
+            widget: "list"
+            field: { label: "Nombre de Sección", name: "nombre", widget: "string" }
+          - { label: "Reglas Editoriales (Texto de Información)", name: "reglas", widget: "markdown" }
+
+  # 2. PANEL DE ESCRITURA DE ARTÍCULOS
   - name: "articulos"
-    label: "Artículos"
+    label: "📝 Redacción de Artículos"
     folder: "contenido/articulos"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{year}}-{{month}}-{{slug}}"
     fields:
-      - { label: "Título", name: "title", widget: "string" }
-      - { label: "Fecha", name: "date", widget: "datetime" }
-      - { label: "Resumen", name: "summary", widget: "text" }
-      - { label: "Imagen de portada", name: "thumbnail", widget: "image", required: false }
-      - { label: "Cuerpo de la noticia", name: "body", widget: "markdown" }
+      - { label: "Título de la publicación", name: "titulo", widget: "string" }
+      - { label: "Autor o Seudónimo", name: "autor", widget: "string" }
+      - { label: "Sección", name: "seccion", widget: "string", hint: "Escribe en qué sección va (Ej: Poesía, Entrevista, Crónica)" }
+      - { label: "Número de Edición", name: "edicion", widget: "string", default: "#01" }
+      - { label: "Imagen de Portada", name: "imagen", widget: "image", required: false }
+      - { label: "Cuerpo del Texto", name: "body", widget: "markdown", hint: "Usa este editor para escribir. Puedes agregar negritas, citas, enlaces o insertar imágenes entre los párrafos." }
