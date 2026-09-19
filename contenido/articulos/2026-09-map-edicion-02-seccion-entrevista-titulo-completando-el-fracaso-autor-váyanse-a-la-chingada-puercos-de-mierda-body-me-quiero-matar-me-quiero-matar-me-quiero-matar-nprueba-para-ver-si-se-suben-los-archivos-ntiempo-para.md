@@ -1,6 +1,6 @@
 ---
 titulo: Completando el fracaso
-autor: Váyanse a la chingada puercos de mierda
+autor: Váyanse
 seccion: Poesía
 edicion: "#02"
 ---
