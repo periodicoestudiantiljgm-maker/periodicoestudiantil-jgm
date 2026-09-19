@@ -1065,5 +1065,178 @@
   }
   cargarArticulos();
 </script>
+    <!-- Motor de lectura, filtrado por secciones y estética de movimientos artísticos -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  const REPO_USER = 'periodicoestudiantiljgm-maker';
+  const REPO_NAME = 'periodicoestudiantil-jgm';
+  const FOLDER_PATH = 'contenido/articulos';
+
+  // Paleta minimalista inspirada en movimientos del arte (Cero Emojis)
+  const paletaSecciones = {
+    'Ensayos & Opinión': { color: '#9C7A4A', bg: '#FDFBFA' }, // Renacimiento: Dorados y tierras
+    'Crónicas': { color: '#7B2C37', bg: '#FCF7F7' },         // Barroco: Granates densos y claroscuros
+    'Poesía': { color: '#648796', bg: '#F4F7F9' },           // Impresionismo: Pasteles desaturados
+    'Cuentos': { color: '#C74A25', bg: '#FFF7F5' },          // Fauvismo: Naranja terroso vibrante
+    'Filosofía': { color: '#4A5060', bg: '#F8F9FA' },        // Existencialismo: Gris plomo sobrio
+    'Cartas al Director': { color: '#2E4057', bg: '#F5F7F9' },// Institucional clásico
+    'Reseña - Películas': { color: '#8A6D3B', bg: '#FDFCF7' },// Sepia cinematográfico
+    'Reseña - Literatura': { color: '#3F6151', bg: '#F5F9F7' },// Verde carruaje antiguo
+    'Reseña - Arte': { color: '#6B4C7A', bg: '#FBF8FC' },    // Púrpura apagado
+    'Portada': { color: '#0F2C59', bg: '#F8F9FA' }           // Azul original JGM
+  };
+
+  let articulosGlobales = [];
+
+  function obtenerColores(seccion) {
+    return paletaSecciones[seccion] || paletaSecciones['Portada'];
+  }
+
+  function parseFrontmatter(text) {
+    const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+    if (!match) return { meta: {}, body: text };
+    
+    const yamlLines = match[1].split('\n');
+    const meta = {};
+    yamlLines.forEach(line => {
+      const index = line.indexOf(':');
+      if (index !== -1) {
+        const key = line.slice(0, index).trim();
+        const value = line.slice(index + 1).trim().replace(/^['"]|['"]$/g, '');
+        meta[key] = value;
+      }
+    });
+    return { meta, body: match[2] };
+  }
+
+  async function cargarArticulosDesdeGitHub() {
+    const contenedorLista = document.getElementById('contenedor-articulos');
+    try {
+      const response = await fetch(`https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/contents/${FOLDER_PATH}`);
+      if (!response.ok) throw new Error('No se pudo acceder');
+      
+      const archivos = await response.json();
+      const archivosMd = archivos.filter(f => f.name.endsWith('.md')).reverse();
+
+      articulosGlobales = [];
+
+      for (const archivo of archivosMd) {
+        const resContenido = await fetch(archivo.download_url);
+        const texto = await resContenido.text();
+        const { meta, body } = parseFrontmatter(texto);
+        
+        const titulo = meta.titulo || meta.title;
+        if (titulo && body.trim()) {
+          articulosGlobales.push({
+            id: archivo.sha,
+            titulo: titulo,
+            autor: meta.autor || 'Anónimo',
+            seccion: meta.seccion || 'Portada',
+            edicion: meta.edicion || '#01',
+            cuerpo: body
+          });
+        }
+      }
+      filtrarPorSeccion('Portada');
+    } catch (error) {
+      if (contenedorLista) contenedorLista.innerHTML = '<p style="padding:10px; font-size:0.85rem;">No se encontraron artículos publicados.</p>';
+    }
+  }
+
+  function renderizarListaLateral(articulosAFiltrar) {
+    const contenedorLista = document.getElementById('contenedor-articulos');
+    if (!contenedorLista) return;
+
+    if (articulosAFiltrar.length === 0) {
+      contenedorLista.innerHTML = '<p style="padding:10px; font-size:0.85rem; color:#666; font-style: italic;">Sin publicaciones en esta sección.</p>';
+      return;
+    }
+
+    let html = '<ul style="list-style:none; padding:0; margin:0; text-align:left;">';
+    articulosAFiltrar.forEach((art) => {
+      const colores = obtenerColores(art.seccion);
+      html += `
+        <li style="padding: 14px 12px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.3s ease;" 
+            onmouseover="this.style.backgroundColor='${colores.bg}'" 
+            onmouseout="this.style.backgroundColor='transparent'"
+            onclick="verArticuloCompleto('${art.id}')">
+          <span style="font-size:0.7rem; font-weight:bold; color:${colores.color}; text-transform:uppercase; letter-spacing: 0.8px;">[ ${art.seccion} ]</span>
+          <div style="font-weight:700; color:#1A2129; margin:6px 0; font-family: 'Playfair Display', serif; font-size: 1.05rem; line-height: 1.3;">${art.titulo}</div>
+          <div style="font-size:0.75rem; color:#5A6578; text-transform: uppercase; letter-spacing: 0.5px;">Por ${art.autor}</div>
+        </li>
+      `;
+    });
+    html += '</ul>';
+    contenedorLista.innerHTML = html;
+  }
+
+  function verArticuloCompleto(id) {
+    const art = articulosGlobales.find(a => a.id === id);
+    if (!art) return;
+
+    const colores = obtenerColores(art.seccion);
+
+    // Actualizar datos de la tarjeta y aplicar los colores estéticos
+    const etiqueta = document.getElementById('etiquetaSeccionActiva');
+    etiqueta.innerText = art.seccion;
+    etiqueta.style.color = colores.color;
+    etiqueta.style.backgroundColor = colores.bg;
+    etiqueta.style.border = `1px solid ${colores.color}40`;
+
+    document.getElementById('tituloArticuloPrincipal').innerText = art.titulo;
+    document.getElementById('autorArticuloPrincipal').innerText = art.autor;
+    document.getElementById('edicionArticuloPrincipal').innerText = art.edicion;
+    
+    const contenidoDiv = document.getElementById('contenidoArticuloPrincipal');
+    contenidoDiv.innerHTML = marked.parse(art.cuerpo);
+
+    // Ajuste de identidad visual de la tarjeta grande
+    const articuloDestacado = document.getElementById('seccionPrincipalArticulo');
+    articuloDestacado.style.borderLeft = `6px solid ${colores.color}`;
+    
+    // Forzamos a que la letra capital (dropcap) herede el color de su movimiento
+    articuloDestacado.style.setProperty('--u-blue', colores.color);
+  }
+
+  function filtrarPorSeccion(nombreSeccion) {
+    let filtrados = articulosGlobales;
+    if (nombreSeccion !== 'Portada') {
+      filtrados = articulosGlobales.filter(a => a.seccion.toLowerCase() === nombreSeccion.toLowerCase());
+    }
+
+    renderizarListaLateral(filtrados);
+
+    if (filtrados.length > 0) {
+      verArticuloCompleto(filtrados[0].id);
+    } else {
+      const colores = obtenerColores(nombreSeccion);
+      
+      const etiqueta = document.getElementById('etiquetaSeccionActiva');
+      etiqueta.innerText = nombreSeccion;
+      etiqueta.style.color = colores.color;
+      etiqueta.style.backgroundColor = colores.bg;
+      etiqueta.style.border = `1px solid ${colores.color}40`;
+
+      document.getElementById('tituloArticuloPrincipal').innerText = `Sección ${nombreSeccion}`;
+      document.getElementById('autorArticuloPrincipal').innerText = 'Comité Editorial JGM';
+      document.getElementById('edicionArticuloPrincipal').innerText = 'Convocatoria Abierta';
+      document.getElementById('contenidoArticuloPrincipal').innerHTML = `<p style="color: #5A6578; font-style: italic;">Actualmente no hay artículos publicados en la sección de <strong>${nombreSeccion}</strong>. Si deseas enviar una propuesta, utiliza el botón superior de "Enviar Colaboración".</p>`;
+      
+      // Aplicar color estético incluso a las secciones vacías
+      const articuloDestacado = document.getElementById('seccionPrincipalArticulo');
+      articuloDestacado.style.borderLeft = `6px solid ${colores.color}`;
+      articuloDestacado.style.setProperty('--u-blue', colores.color);
+    }
+  }
+
+  // Conectar el menú de navegación de arriba con el sistema dinámico
+  window.cambiarSeccion = function(nombreSeccion, elementoNav) {
+    document.querySelectorAll('nav a, .dropdown-btn').forEach(el => el.classList.remove('active'));
+    if (elementoNav) elementoNav.classList.add('active');
+    filtrarPorSeccion(nombreSeccion);
+  };
+
+  cargarArticulosDesdeGitHub();
+</script>
 </body>
 </html>
