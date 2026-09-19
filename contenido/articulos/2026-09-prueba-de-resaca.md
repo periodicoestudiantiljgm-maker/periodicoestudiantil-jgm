@@ -1,7 +1,7 @@
 ---
 title: Prueba de resaca
 bajada: (En madrugada)
-seccion: Reseñas (Cine, Lit, Arte)
+seccion: Cartas al Director
 autor: Anónimo
 date: 2026-09-19T07:49:00.000-03:00
 destacado: true
