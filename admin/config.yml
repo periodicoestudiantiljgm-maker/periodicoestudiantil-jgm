@@ -1,37 +1,113 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: periodicoestudiantiljgm-maker/periodicoestudiantil-jgm
   branch: main
 
-media_folder: "images/uploads"
-public_folder: "/images/uploads"
+# ¡LA MAGIA DE LA SALA DE REDACCIÓN!
+# Habilita el panel de Flujo de Trabajo: Borradores -> En Revisión -> Publicados
+publish_mode: editorial_workflow
+
+# Idioma oficial del panel
+locale: "es"
+
+# Motor de Medios Centralizado (Aquí irán todas las fotos, arte e ilustraciones)
+media_folder: "contenido/imagenes"
+public_folder: "/contenido/imagenes"
 
 collections:
-  # 1. PANEL DE CONTROL DE LA PÁGINA
-  - name: "ajustes_sitio"
-    label: "⚙️ Administrar Página"
+  # ==========================================
+  # 1. CENTRO DE MANDO (Ajustes Globales)
+  # ==========================================
+  - name: "configuracion"
+    label: "⚙️ Centro de Mando Global"
+    editor:
+      preview: false
     files:
-      - label: "Configuración y Menú"
-        name: "configuracion"
-        file: "contenido/configuracion.json"
+      - label: "Identidad del Periódico"
+        name: "identidad"
+        file: "contenido/ajustes/identidad.yml"
         fields:
-          - { label: "Título del Periódico", name: "titulo_principal", widget: "string" }
-          - { label: "Subtítulo / Lema", name: "lema", widget: "string" }
-          - label: "Menú de Secciones (Agrega o quita secciones aquí)"
-            name: "secciones_menu"
+          - { label: "Nombre Oficial del Periódico", name: "site_name", widget: "string" }
+          - { label: "Lema o Consigna Principal", name: "site_motto", widget: "string" }
+          - { label: "Correo de Contacto Editorial", name: "email", widget: "string", required: false }
+          - label: "Redes Sociales"
+            name: "socials"
             widget: "list"
-            field: { label: "Nombre de Sección", name: "nombre", widget: "string" }
-          - { label: "Reglas Editoriales (Texto de Información)", name: "reglas", widget: "markdown" }
+            required: false
+            fields:
+              - { label: "Plataforma (Ej: Instagram, Twitter)", name: "platform", widget: "string" }
+              - { label: "Enlace (URL)", name: "url", widget: "string" }
+      - label: "Manifiesto y Línea Editorial"
+        name: "reglas"
+        file: "contenido/ajustes/reglas.yml"
+        fields:
+          - { label: "Reglamento Oficial para Autores", name: "body", widget: "markdown" }
 
-  # 2. PANEL DE ESCRITURA DE ARTÍCULOS
+  # ==========================================
+  # 2. REDACCIÓN Y PUBLICACIONES
+  # ==========================================
   - name: "articulos"
-    label: "📝 Redacción de Artículos"
+    label: "📰 Redacción de Artículos"
+    label_singular: "Artículo"
     folder: "contenido/articulos"
     create: true
+    # El slug se genera solo sin que tengas que poner números manuales
     slug: "{{year}}-{{month}}-{{slug}}"
+    summary: "[{{seccion}}] {{title}} - {{autor}}" 
     fields:
-      - { label: "Título de la publicación", name: "titulo", widget: "string" }
-      - { label: "Autor o Seudónimo", name: "autor", widget: "string" }
-      - { label: "Sección", name: "seccion", widget: "string", hint: "Escribe en qué sección va (Ej: Poesía, Entrevista, Crónica)" }
-      - { label: "Número de Edición", name: "edicion", widget: "string", default: "#01" }
-      - { label: "Imagen de Portada", name: "imagen", widget: "image", required: false }
-      - { label: "Cuerpo del Texto", name: "body", widget: "markdown", hint: "Usa este editor para escribir. Puedes agregar negritas, citas, enlaces o insertar imágenes entre los párrafos." }
+      - { label: "Título Principal", name: "title", widget: "string" }
+      - { label: "Bajada o Epígrafe (Breve resumen bajo el título)", name: "bajada", widget: "text", required: false }
+      
+      # Menú de secciones cerrado. Nadie puede inventar una sección que no exista aquí.
+      - label: "Sección Editorial"
+        name: "seccion"
+        widget: "select"
+        options: 
+          - "Arte, Ilustración & Fotografía"
+          - "Cartas al Director"
+          - "Crónicas & Reportajes"
+          - "Cuentos & Narrativa"
+          - "Ensayos & Opinión"
+          - "Entrevistas"
+          - "Filosofía & Crítica"
+          - "Poesía"
+          - "Reseñas (Cine, Lit, Arte)"
+          - "Música & Escena Local"
+          - "Sátira & Humor"
+          
+      - { label: "Autor o Seudónimo", name: "autor", widget: "string", default: "Anónimo" }
+      - { label: "Fecha de Publicación (Automática)", name: "date", widget: "datetime" }
+      
+      # Herramientas Editoriales Avanzadas
+      - { label: "🔥 Artículo Destacado (Fijar en Portada)", name: "destacado", widget: "boolean", default: false }
+      - { label: "Palabras Clave (Tags)", name: "tags", widget: "list", required: false }
+      
+      # Módulo de Imagen Destacada (Con formato profesional)
+      - label: "Imagen Destacada (Arte/Foto Principal)"
+        name: "thumbnail"
+        widget: "object"
+        required: false
+        fields:
+          - { label: "Subir Imagen", name: "image", widget: "image" }
+          - { label: "Pie de foto (Créditos del artista/fotógrafo)", name: "caption", widget: "string", required: false }
+          - { label: "Texto Alternativo (Accesibilidad/SEO)", name: "alt", widget: "string", default: "Imagen destacada del artículo" }
+          
+      # El lienzo principal de escritura
+      - { label: "Cuerpo del Artículo", name: "body", widget: "markdown" }
+
+  # ==========================================
+  # 3. EQUIPO Y COLABORADORES
+  # ==========================================
+  - name: "equipo"
+    label: "👥 Directorio del Equipo"
+    label_singular: "Colaborador"
+    folder: "contenido/equipo"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} ({{rol}})"
+    fields:
+      - { label: "Nombre Completo o Seudónimo", name: "title", widget: "string" }
+      - { label: "Rol en el Periódico (Ej: Editora de Poesía)", name: "rol", widget: "string" }
+      - { label: "Foto de Perfil", name: "avatar", widget: "image", required: false }
+      - { label: "Biografía Breve", name: "bio", widget: "text" }
+      - { label: "Enlace (Portafolio / Red Social)", name: "link", widget: "string", required: false }
