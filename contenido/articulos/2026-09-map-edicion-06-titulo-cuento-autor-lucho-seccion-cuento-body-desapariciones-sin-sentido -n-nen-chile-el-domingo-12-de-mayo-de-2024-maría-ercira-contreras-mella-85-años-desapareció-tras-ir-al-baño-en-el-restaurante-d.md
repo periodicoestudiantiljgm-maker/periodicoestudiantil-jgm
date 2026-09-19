@@ -1,8 +1,8 @@
 ---
 titulo: Cuento
 autor: Lucho
-seccion: Cuento
-edicion: "#06"
+seccion: Cuentos
+edicion: "#01"
 ---
 Desapariciones sin sentido 
 
