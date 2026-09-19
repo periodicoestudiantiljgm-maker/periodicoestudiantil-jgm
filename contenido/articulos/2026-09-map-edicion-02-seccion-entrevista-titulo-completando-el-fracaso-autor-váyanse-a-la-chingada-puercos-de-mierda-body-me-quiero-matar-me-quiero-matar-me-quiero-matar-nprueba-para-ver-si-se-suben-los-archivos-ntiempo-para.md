@@ -1,5 +1,5 @@
 ---
-titulo: Completando el fracas
+titulo: Completando el fracaso
 autor: Váyanse
 seccion: Poesía
 edicion: "#02"
