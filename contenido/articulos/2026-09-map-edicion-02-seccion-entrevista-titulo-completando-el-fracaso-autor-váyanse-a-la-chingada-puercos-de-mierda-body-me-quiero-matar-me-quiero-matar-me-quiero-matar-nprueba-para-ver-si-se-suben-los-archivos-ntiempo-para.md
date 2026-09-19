@@ -1,7 +1,7 @@
 ---
 titulo: Completando el fracaso
 autor: Váyanse a la chingada puercos de mierda
-seccion: Entrevista
+seccion: Poesía
 edicion: "#02"
 ---
 me quiero matar me quiero matar me quiero matar:\
