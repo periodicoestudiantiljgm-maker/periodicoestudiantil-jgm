@@ -700,8 +700,7 @@
                 <span class="etiqueta-seccion">Índice de Publicaciones</span>
                 <h2 class="titulo-modulo">Artículos Publicados</h2>
                 <p class="resumen-modulo">Accede a las colaboraciones del catálogo (#01 en adelante).</p>
-                <ul class="ranking-lista" id="rankingListaContainer">
-                </ul>
+                <div id="contenedor-articulos" class="ranking-lista" style="padding: 15px; font-size: 0.9em; text-align: center; color: #5A6578;">Cargando publicaciones recientes...</div>
             </div>
 
             <div class="modulo-lateral">
@@ -1006,5 +1005,65 @@
             }
         }
     </script>
+
+<!-- Motor de lectura de artículos -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  const REPO_USER = 'periodicoestudiantiljgm-maker';
+  const REPO_NAME = 'periodicoestudiantil-jgm';
+  const FOLDER_PATH = 'contenido/articulos';
+
+  async function cargarArticulos() {
+    const contenedor = document.getElementById('contenedor-articulos');
+    try {
+      const response = await fetch(`https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/contents/${FOLDER_PATH}`);
+      if (!response.ok) throw new Error('No se pudo acceder');
+      
+      const archivos = await response.json();
+      const archivosMd = archivos.filter(f => f.name.endsWith('.md')).reverse();
+
+      if (archivosMd.length === 0) {
+        contenedor.innerHTML = '<p>Aún no hay artículos publicados.</p>';
+        return;
+      }
+
+      contenedor.innerHTML = '';
+      for (const archivo of archivosMd) {
+        const resContenido = await fetch(archivo.download_url);
+        const texto = await resContenido.text();
+        
+        // Separar metadatos (título, autor) del contenido
+        const partes = texto.split('---');
+        let titulo = 'Sin título', autor = '', cuerpo = texto;
+        
+        if (partes.length >= 3) {
+          const meta = partes[1];
+          cuerpo = partes.slice(2).join('---');
+          
+          const matchTitulo = meta.match(/title:\s*["']?(.*?)["']?\n/);
+          if (matchTitulo) titulo = matchTitulo[1];
+          
+          const matchAutor = meta.match(/autor:\s*["']?(.*?)["']?\n/);
+          if (matchAutor) autor = matchAutor[1];
+        }
+
+        const articuloHtml = marked.parse(cuerpo);
+        
+        // Inyectar con el diseño actual
+        contenedor.innerHTML += `
+          <article style="background: #fff; padding: 25px; border: 1px solid #D1D8E0; margin-bottom: 30px; border-radius: 4px;">
+            <h3 style="margin-top: 0; color: #0F2C59;">${titulo}</h3>
+            ${autor ? `<p style="font-size: 0.9em; color: #5A6578; text-transform: uppercase;">✍️ ${autor}</p>` : ''}
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+            <div style="color: #1A2129;">${articuloHtml}</div>
+          </article>
+        `;
+      }
+    } catch (error) {
+      contenedor.innerHTML = '<p>No se encontraron artículos.</p>';
+    }
+  }
+  cargarArticulos();
+</script>
 </body>
 </html>
