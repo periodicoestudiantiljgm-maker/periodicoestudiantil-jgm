@@ -1,5 +1,5 @@
 ---
-titulo: Completando el fracaso
+titulo: "Completando el fracasado de la nada; cansancio: siempre igual ctm"
 autor: Váyanse
 seccion: Poesía
 edicion: "#02"
